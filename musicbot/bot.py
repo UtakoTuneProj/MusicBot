@@ -485,10 +485,7 @@ class MusicBot(discord.Client):
                 newmsg = 'Now playing in `%s`: `%s` added by `%s`' % (
                     player.voice_client.channel.name, entry.title, entry.meta['author'].name)
 
-            if self.server_specific_data[channel.guild]['last_np_msg']:
-                self.server_specific_data[channel.guild]['last_np_msg'] = await self.safe_edit_message(last_np_msg, newmsg, send_if_fail=True)
-            else:
-                self.server_specific_data[channel.guild]['last_np_msg'] = await self.safe_send_message(channel, newmsg)
+            self.server_specific_data[channel.guild]['last_np_msg'] = await self.safe_send_message(channel, newmsg)
 
         # TODO: Check channel voice state?
 
@@ -2565,10 +2562,6 @@ class MusicBot(discord.Client):
 
         message_content = message.content.strip()
         if not message_content.startswith(self.config.command_prefix):
-            return
-
-        if message.author == self.user:
-            log.warning("Ignoring command from myself ({})".format(message.content))
             return
 
         if self.config.bound_channels and message.channel.id not in self.config.bound_channels:
